@@ -63,6 +63,11 @@ interface CocktailApi {
 class Cocktails {
     JsonArray drinks;
 }
+/*class Cocktail {
+    String name;
+    String image;
+    String instructions;
+}*/
 class CocktailFinderRepo {
     private final String BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1/";
     Retrofit retrofit = new Retrofit.Builder()

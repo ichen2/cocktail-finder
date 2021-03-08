@@ -9,10 +9,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -31,6 +33,7 @@ import retrofit2.http.Query;
 public class MainActivity extends AppCompatActivity {
     CocktailFinderViewModel mCocktailFinderViewModel;
     RecyclerView mCocktailRecyclerView;
+    EditText mInputCharEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,23 +62,34 @@ public class MainActivity extends AppCompatActivity {
                     adapter.setCocktails(cocktails);
                     mCocktailRecyclerView.setAdapter(adapter);
                     displayRecyclerView();
+                    hideKeyboard(MainActivity.this);
+                    mInputCharEditText.setText("");
                 }
             }
         });
-        EditText inputCharEditText = (EditText) findViewById(R.id.first_char_query);
+        mInputCharEditText = (EditText) findViewById(R.id.first_char_query);
         Button searchButton = (Button) findViewById(R.id.btn_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!mCocktailFinderViewModel.getCocktails(inputCharEditText.getText().toString())) {
+                if(!mCocktailFinderViewModel.getCocktails(mInputCharEditText.getText().toString())) {
                     Toast.makeText(MainActivity.this, "Invalid input. Please enter a single letter.", Toast.LENGTH_LONG).show();
+                    mInputCharEditText.setText("");
                 }
             }
         });
     }
     void displayRecyclerView() {
-        LinearLayout searchLayout = (LinearLayout) findViewById(R.id.search_query_layout);
-        //searchLayout.setVisibility(View.GONE);
-        mCocktailRecyclerView.setVisibility(View.VISIBLE);
+        if(mCocktailRecyclerView.getVisibility() != View.VISIBLE) {
+            mCocktailRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+    void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
