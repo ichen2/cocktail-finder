@@ -14,7 +14,7 @@
     <TextView
         android:id="@+id/tv_cocktail_item"
         tools:text="Cocktail"
-        android:textSize="36sp"
+        android:textSize="24sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"/>
